@@ -779,6 +779,26 @@ dialog::backdrop { background: var(--overlay); }
   text-align: center;
 }
 
+/* ═══ Touch targets ═══
+   Every control sits at 25-30px, which is fine for a mouse and too small
+   for a thumb. Grow them only where the pointer is coarse, so the desktop
+   density the plan depends on is untouched. */
+@media (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .btn-week { padding-left: 0.8rem; padding-right: 0.8rem; }
+  .theme-switch button { width: 46px; height: 44px; }
+  .dlg-close { width: 44px; height: 44px; }
+  .opt { padding-top: 0.7rem; padding-bottom: 0.7rem; }
+  .tab { padding: 0.7rem 0.6rem 0.75rem; }
+  .lib-check { width: 20px; height: 20px; }
+  .lib-row { padding-top: 0.7rem; padding-bottom: 0.7rem; }
+  .field { padding: 0.65rem 0.65rem; }
+}
+
 /* ═══ Small screens ═══ */
 @media (max-width: 700px) {
   .page-header { padding: 1.4rem 1.1rem 1.1rem; }
