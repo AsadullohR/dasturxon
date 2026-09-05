@@ -745,6 +745,88 @@ dialog::backdrop { background: var(--overlay); }
 
 .lib-edit-actions { display: flex; gap: 0.4rem; }
 
+/* ═══ Shopping list ═══ */
+.shop-group { border-bottom: 1px solid var(--border-faint); }
+.shop-group:last-child { border-bottom: 0; }
+
+.shop-group-title {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 0.4rem 1.25rem;
+  position: sticky;
+  top: 0;
+}
+
+.shop-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.7rem;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+}
+.shop-row:hover { background: var(--accent-tint); }
+.shop-row + .shop-row { border-top: 1px solid var(--border-faint); }
+
+.shop-row .lib-check { margin-top: 0.15rem; }
+
+.shop-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.shop-count {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: var(--accent-tint);
+  border-radius: 2px;
+  padding: 0.05rem 0.35rem;
+  white-space: nowrap;
+}
+
+.shop-dishes {
+  display: block;
+  font-size: 0.71rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: 0.1rem;
+}
+
+.shop-row.is-done .shop-name { text-decoration: line-through; }
+.shop-row.is-done .shop-name,
+.shop-row.is-done .shop-dishes { opacity: 0.5; }
+
+.shop-note {
+  padding: 0.6rem 1.25rem 0.8rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.lib-ing {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: 0.15rem;
+}
+.lib-ing.is-missing { color: var(--text-faint); font-style: italic; }
+
+.add-form-wide { grid-template-columns: 1fr 1fr auto; }
+.add-form-full { grid-column: 1 / -1; }
+
+/* ═══ Print-only shopping list ═══ */
+#shopping-print { display: none; }
+
 /* ═══ Toast ═══ */
 .toast {
   position: fixed;
@@ -837,7 +919,60 @@ dialog::backdrop { background: var(--overlay); }
   .grid-wrap { overflow: visible; border-color: #c8c0b0; }
   .days-grid { min-width: unset; }
   .page-footer { display: none; }
+
+  /* Printing the shopping list swaps the whole page for the list. */
+  body.printing-list > *:not(#shopping-print) { display: none !important; }
+  body.printing-list #shopping-print { display: block; }
+
+  #shopping-print { color: #111; }
+  .print-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .print-sub {
+    font-size: 0.8rem;
+    color: #4a4030;
+    margin: 0.2rem 0 1.2rem;
+  }
+  .print-group { break-inside: avoid; margin-bottom: 1.1rem; }
+  .print-group h2 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: #4a4030;
+    border-bottom: 1px solid #c8c0b0;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.4rem;
+  }
+  .print-group ul {
+    columns: 2;
+    column-gap: 2rem;
+    list-style: none;
+  }
+  .print-group li {
+    font-size: 0.88rem;
+    padding: 0.18rem 0 0.18rem 1.4rem;
+    position: relative;
+    break-inside: avoid;
+  }
+  /* An empty box to tick off at the bazaar. */
+  .print-group li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #6a5d47;
+  }
+  .print-group li span { color: #6a5d47; font-size: 0.76rem; }
+
+  /* The plan wants landscape; a shopping list reads better in portrait. */
+  body.printing-list { page: shoplist; }
 }
+
+@page shoplist { size: A4 portrait; margin: 1.4cm; }
 </style>
 </head>
 <body>
@@ -875,6 +1010,14 @@ dialog::backdrop { background: var(--overlay); }
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
         </svg>
         <span class="lbl">Taomlar ro'yxati</span>
+      </button>
+
+      <button class="btn btn-ghost" id="btn-shopping">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"/>
+          <circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
+        </svg>
+        <span class="lbl">Xarid ro'yxati</span>
       </button>
 
       <button class="btn btn-ghost" id="btn-shuffle-all">
@@ -960,9 +1103,10 @@ dialog::backdrop { background: var(--overlay); }
       <div id="lib-list"></div>
     </div>
 
-    <form class="add-form" id="lib-add">
+    <form class="add-form add-form-wide" id="lib-add">
       <input type="text" class="field" name="n" placeholder="Yangi taom nomi" aria-label="Yangi taom nomi" required maxlength="60" autocomplete="off">
       <input type="text" class="field" name="s" placeholder="Izoh (ixtiyoriy)" aria-label="Izoh" maxlength="90" autocomplete="off">
+      <input type="text" class="field add-form-full" name="ing" placeholder="Mahsulotlar, vergul bilan: Guruch, Piyoz, Sabzi" aria-label="Mahsulotlar, vergul bilan" maxlength="240" autocomplete="off">
       <button type="submit" class="btn btn-accent">Qo'shish</button>
     </form>
 
@@ -973,6 +1117,37 @@ dialog::backdrop { background: var(--overlay); }
     </div>
   </div>
 </dialog>
+
+<!-- ══ SHOPPING LIST DIALOG ══ -->
+<dialog id="shopping" aria-labelledby="shopping-title">
+  <div class="dlg">
+    <div class="dlg-head">
+      <div class="dlg-head-text">
+        <div class="dlg-sub" id="shop-summary">Xarid ro'yxati</div>
+        <div class="dlg-title" id="shopping-title">Xarid ro'yxati</div>
+      </div>
+      <button type="button" class="dlg-close" data-close aria-label="Yopish">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="tabs" role="tablist" id="shop-scopes"></div>
+
+    <div class="dlg-body">
+      <div id="shop-list"></div>
+    </div>
+
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-ghost" id="btn-shop-copy">Nusxa olish</button>
+      <button type="button" class="btn btn-ghost" id="btn-shop-print">Chop etish</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn-quiet" id="btn-shop-clear">Belgilarni tozalash</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Print-only rendering of the shopping list; see body.printing-list -->
+<section id="shopping-print" aria-hidden="true"></section>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
@@ -993,56 +1168,95 @@ const KIND = {
   sp: { label: "Maxsus ovqat", tab: "Maxsus" },
 };
 
+// Each dish: [name, one-line description, ingredients].
+// Ingredient names are a controlled vocabulary — the shopping list groups and
+// counts by exact string, so "Piyoz" must always be written "Piyoz".
 const DEFAULT_LIB = {
   b: [
-    ["Non va Qaymoq",      "Ko'k choy bilan"],
-    ["Tuxum Kovurma",      "Non va choy bilan"],
-    ["Qatiq va Asal",      "Non bilan"],
-    ["Non va Meva",        "Ko'k choy bilan"],
-    ["Somsa",              "Ko'k choy bilan"],
-    ["Halim",              "Bug'doy va go'sht loshi"],
-    ["Non va Sariyog'",    "Ko'k choy bilan"],
-    ["Qatiq va Shaftoli",  "Non bilan"],
-    ["Tuxum va Non",       "Ko'k choy bilan"],
-    ["Qovoqli Somsa",      "Ko'k choy bilan"],
-    ["Qatiq",              "Non va asal bilan"],
-    ["Shirin Non",         "Ko'k choy, qaymoq bilan"],
-    ["Non va Choy",        "Qaymoq, asal bilan"],
+    ["Non va Qaymoq",      "Ko'k choy bilan",           ["Non", "Qaymoq", "Ko'k choy"]],
+    ["Tuxum Kovurma",      "Non va choy bilan",         ["Tuxum", "Sariyog'", "Non", "Ko'k choy"]],
+    ["Qatiq va Asal",      "Non bilan",                 ["Qatiq", "Asal", "Non"]],
+    ["Non va Meva",        "Ko'k choy bilan",           ["Non", "Mavsumiy mevalar", "Ko'k choy"]],
+    ["Somsa",              "Ko'k choy bilan",           ["Somsa xamiri", "Mol go'shti", "Piyoz", "Ziravorlar", "Ko'k choy"]],
+    ["Halim",              "Bug'doy va go'sht loshi",   ["Bug'doy", "Mol go'shti", "Sariyog'"]],
+    ["Non va Sariyog'",    "Ko'k choy bilan",           ["Non", "Sariyog'", "Ko'k choy"]],
+    ["Qatiq va Shaftoli",  "Non bilan",                 ["Qatiq", "Shaftoli", "Non"]],
+    ["Tuxum va Non",       "Ko'k choy bilan",           ["Tuxum", "Non", "Ko'k choy"]],
+    ["Qovoqli Somsa",      "Ko'k choy bilan",           ["Somsa xamiri", "Qovoq", "Piyoz", "Sariyog'", "Ko'k choy"]],
+    ["Qatiq",              "Non va asal bilan",         ["Qatiq", "Non", "Asal"]],
+    ["Shirin Non",         "Ko'k choy, qaymoq bilan",   ["Shirin non", "Qaymoq", "Ko'k choy"]],
+    ["Non va Choy",        "Qaymoq, asal bilan",        ["Non", "Qaymoq", "Asal", "Ko'k choy"]],
   ],
   l: [
-    ["Shurpa",             "Qo'zi go'shti, sabzavot"],
-    ["Lagman",             "Aralash go'sht, sabzavot"],
-    ["Mastava",            "Guruch, go'sht sho'rvasi"],
-    ["Mosxo'rda",          "Mosh, go'sht, ziravorlar"],
-    ["Chuchvara Sho'rva",  "Mol go'shti sho'rvasi"],
-    ["Dimlama",            "Qo'zi, kartoshka, sabzavot"],
-    ["Moshkichiri",        "Mosh, guruch, go'sht"],
-    ["Tovuq Shurpasi",     "Ko'k sabzavot, kartoshka"],
-    ["Qovurma Lagman",     "Qovurilgan aralash go'sht"],
+    ["Shurpa",             "Qo'zi go'shti, sabzavot",   ["Qo'zi go'shti", "Kartoshka", "Sabzi", "Piyoz", "Pomidor", "Ko'kat"]],
+    ["Lagman",             "Aralash go'sht, sabzavot",  ["Kesma xamiri", "Mol go'shti", "Bulg'or qalampiri", "Piyoz", "Pomidor", "Sabzi"]],
+    ["Mastava",            "Guruch, go'sht sho'rvasi",  ["Guruch", "Mol go'shti", "Sabzi", "Piyoz", "Pomidor"]],
+    ["Mosxo'rda",          "Mosh, go'sht, ziravorlar",  ["Mosh", "Guruch", "Mol go'shti", "Sabzi", "Piyoz", "Ziravorlar"]],
+    ["Chuchvara Sho'rva",  "Mol go'shti sho'rvasi",     ["Chuchvara xamiri", "Mol go'shti", "Piyoz", "Kartoshka", "Sabzi"]],
+    ["Dimlama",            "Qo'zi, kartoshka, sabzavot",["Qo'zi go'shti", "Kartoshka", "Sabzi", "Piyoz", "Karam", "Pomidor"]],
+    ["Moshkichiri",        "Mosh, guruch, go'sht",      ["Mosh", "Guruch", "Mol go'shti", "Piyoz", "Sabzi"]],
+    ["Tovuq Shurpasi",     "Ko'k sabzavot, kartoshka",  ["Tovuq go'shti", "Kartoshka", "Sabzi", "Piyoz", "Ko'kat"]],
+    ["Qovurma Lagman",     "Qovurilgan aralash go'sht", ["Kesma xamiri", "Mol go'shti", "Bulg'or qalampiri", "Piyoz", "Pomidor"]],
   ],
   d: [
-    ["Plov",               "Ziravorlar bilan"],
-    ["Samsa",              "Ko'k choy bilan"],
-    ["Shashlik",           "Non va ko'k salatlar"],
-    ["Manti",              "Qaymoq bilan"],
-    ["Qovurma Kabob",      "Non va sabzavot"],
-    ["Qozon Plov",         "Sariyog', zira bilan"],
-    ["Zirali Plov",        "Zira va sariyog' bilan"],
-    ["Tandir Kabob",       "Non, ko'k salatlar bilan"],
-    ["Naryn",              "Otqorin, piyoz sho'rvasi"],
-    ["Chuchvara",          "Qaymoq yoki sho'rva bilan"],
-    ["Kabob va Non",       "Ko'k salatlar bilan"],
-    ["Qovurma",            "Go'sht, piyoz, non"],
-    ["Sariq Plov",         "Za'faron, qishmish bilan"],
-    ["Qovoqli Manti",      "Qaymoq, ziravorlar bilan"],
-    ["Chuchvarali Plov",   "Guruch, go'sht, chuchvara"],
+    ["Plov",               "Ziravorlar bilan",          ["Guruch", "Qo'zi go'shti", "Sabzi", "Piyoz", "Zira", "Paxta yog'i"]],
+    ["Samsa",              "Ko'k choy bilan",           ["Somsa xamiri", "Mol go'shti", "Piyoz", "Ziravorlar"]],
+    ["Shashlik",           "Non va ko'k salatlar",      ["Qo'zi go'shti", "Piyoz", "Sirka", "Non", "Ko'kat"]],
+    ["Manti",              "Qaymoq bilan",              ["Manti xamiri", "Mol go'shti", "Piyoz", "Qaymoq"]],
+    ["Qovurma Kabob",      "Non va sabzavot",           ["Mol go'shti", "Piyoz", "Kartoshka", "Non"]],
+    ["Qozon Plov",         "Sariyog', zira bilan",      ["Guruch", "Qo'zi go'shti", "Sabzi", "Piyoz", "Sariyog'", "Zira"]],
+    ["Zirali Plov",        "Zira va sariyog' bilan",    ["Guruch", "Qo'zi go'shti", "Sabzi", "Zira", "Sariyog'"]],
+    ["Tandir Kabob",       "Non, ko'k salatlar bilan",  ["Qo'zi go'shti", "Piyoz", "Non", "Ko'kat"]],
+    ["Naryn",              "Otqorin, piyoz sho'rvasi",  ["Kesma xamiri", "Qazi", "Piyoz"]],
+    ["Chuchvara",          "Qaymoq yoki sho'rva bilan", ["Chuchvara xamiri", "Mol go'shti", "Piyoz", "Qaymoq"]],
+    ["Kabob va Non",       "Ko'k salatlar bilan",       ["Mol go'shti", "Piyoz", "Non", "Ko'kat"]],
+    ["Qovurma",            "Go'sht, piyoz, non",        ["Mol go'shti", "Piyoz", "Non", "Paxta yog'i"]],
+    ["Sariq Plov",         "Za'faron, qishmish bilan",  ["Guruch", "Qo'zi go'shti", "Sabzi", "Za'faron", "Qishmish"]],
+    ["Qovoqli Manti",      "Qaymoq, ziravorlar bilan",  ["Manti xamiri", "Qovoq", "Piyoz", "Qaymoq"]],
+    ["Chuchvarali Plov",   "Guruch, go'sht, chuchvara", ["Guruch", "Mol go'shti", "Chuchvara xamiri", "Sabzi", "Piyoz"]],
   ],
   sp: [
-    ["Dum Plov To'yi",     "Qo'zi go'shti, quritilgan o'rik va bedona tuxumi bilan qatlamlangan tantanali plov"],
-    ["Norin To'yi",        "Qo'lda tortilgan kesma, otqorin go'shti va piyoz sho'rvasi bilan an'anaviy tantanali taom"],
-    ["Tandir To'yi",       "Tandirda butun qo'zi, yangi somsa va o't-o'lan salatlar bilan kechki ziyofat"],
-    ["Qozon Kabob To'yi",  "Cho'yan qozonda qo'zi, mol va tovuq go'shtlari, yangi kartoshka va piyoz bilan kechki ziyofat"],
+    ["Dum Plov To'yi",     "Qo'zi go'shti, quritilgan o'rik va bedona tuxumi bilan qatlamlangan tantanali plov",
+     ["Guruch", "Qo'zi go'shti", "Quritilgan o'rik", "Bedana tuxumi", "Sabzi", "Piyoz", "Zira"]],
+    ["Norin To'yi",        "Qo'lda tortilgan kesma, otqorin go'shti va piyoz sho'rvasi bilan an'anaviy tantanali taom",
+     ["Kesma xamiri", "Qazi", "Mol go'shti", "Piyoz"]],
+    ["Tandir To'yi",       "Tandirda butun qo'zi, yangi somsa va o't-o'lan salatlar bilan kechki ziyofat",
+     ["Qo'zi go'shti", "Somsa xamiri", "Piyoz", "Ko'kat", "Ziravorlar"]],
+    ["Qozon Kabob To'yi",  "Cho'yan qozonda qo'zi, mol va tovuq go'shtlari, yangi kartoshka va piyoz bilan kechki ziyofat",
+     ["Qo'zi go'shti", "Mol go'shti", "Tovuq go'shti", "Kartoshka", "Piyoz", "Paxta yog'i"]],
   ],
+};
+
+// Shopping-list grouping. Anything not listed here lands in "Boshqalar".
+const CATEGORIES = [
+  ["gosht",    "Go'sht va tuxum"],
+  ["sut",      "Sut mahsulotlari"],
+  ["sabzavot", "Sabzavot va ko'katlar"],
+  ["meva",     "Mevalar"],
+  ["don",      "Don va xamir"],
+  ["ziravor",  "Ziravor va boshqalar"],
+];
+
+const ING_CATEGORY = {
+  "Qo'zi go'shti": "gosht", "Mol go'shti": "gosht", "Tovuq go'shti": "gosht",
+  "Qazi": "gosht", "Tuxum": "gosht", "Bedana tuxumi": "gosht",
+
+  "Qaymoq": "sut", "Qatiq": "sut", "Sariyog'": "sut",
+
+  "Kartoshka": "sabzavot", "Sabzi": "sabzavot", "Piyoz": "sabzavot",
+  "Pomidor": "sabzavot", "Karam": "sabzavot", "Bulg'or qalampiri": "sabzavot",
+  "Ko'kat": "sabzavot", "Qovoq": "sabzavot",
+
+  "Mavsumiy mevalar": "meva", "Shaftoli": "meva",
+  "Quritilgan o'rik": "meva", "Qishmish": "meva",
+
+  "Guruch": "don", "Mosh": "don", "Bug'doy": "don", "Non": "don",
+  "Shirin non": "don", "Somsa xamiri": "don", "Kesma xamiri": "don",
+  "Chuchvara xamiri": "don", "Manti xamiri": "don",
+
+  "Zira": "ziravor", "Za'faron": "ziravor", "Ziravorlar": "ziravor",
+  "Asal": "ziravor", "Ko'k choy": "ziravor", "Paxta yog'i": "ziravor",
+  "Sirka": "ziravor", "Sirka suvi": "ziravor",
 };
 
 // Weekday layout of the original hand-built month, as 0-based pool indexes.
@@ -1096,7 +1310,9 @@ let nextCustomId = 1;
 function defaultState() {
   const lib = {};
   Object.keys(DEFAULT_LIB).forEach((k) => {
-    lib[k] = DEFAULT_LIB[k].map(([n, s], i) => ({ id: k + (i + 1), n, s, on: true }));
+    lib[k] = DEFAULT_LIB[k].map(([n, s, ing], i) => ({
+      id: k + (i + 1), n, s, ing: (ing || []).slice(), on: true,
+    }));
   });
 
   const weeks = DEFAULT_WEEKS.map((days, wi) => ({
@@ -1105,7 +1321,7 @@ function defaultState() {
     days: days.map(([b, l, d]) => ({ b: "b" + (b + 1), l: "l" + (l + 1), d: "d" + (d + 1) })),
   }));
 
-  return { theme: "system", lib, weeks };
+  return { theme: "system", lib, weeks, bought: {} };
 }
 
 function loadState() {
@@ -1122,6 +1338,7 @@ function loadState() {
       theme: ["light", "dark", "system"].includes(parsed.theme) ? parsed.theme : "system",
       lib: base.lib,
       weeks: base.weeks,
+      bought: (parsed.bought && typeof parsed.bought === "object") ? parsed.bought : {},
     };
 
     if (parsed.lib && typeof parsed.lib === "object") {
@@ -1129,7 +1346,22 @@ function loadState() {
         if (Array.isArray(parsed.lib[k])) {
           const items = parsed.lib[k]
             .filter((it) => it && typeof it.id === "string" && typeof it.n === "string")
-            .map((it) => ({ id: it.id, n: it.n, s: typeof it.s === "string" ? it.s : "", on: it.on !== false }));
+            .map((it) => {
+              // Ingredients arrived after the first release: backfill the
+              // built-in dishes from defaults so saved plans gain a list.
+              let ing = Array.isArray(it.ing) ? it.ing.filter((x) => typeof x === "string") : null;
+              if (!ing) {
+                const builtin = base.lib[k].find((d) => d.id === it.id);
+                ing = builtin ? builtin.ing.slice() : [];
+              }
+              return {
+                id: it.id,
+                n: it.n,
+                s: typeof it.s === "string" ? it.s : "",
+                ing,
+                on: it.on !== false,
+              };
+            });
           if (items.length) next.lib[k] = items;
         }
       });
@@ -1174,6 +1406,17 @@ function syncCustomIdCounter() {
 
 function newId(kind) {
   return kind + "c" + (nextCustomId++);
+}
+
+/** "Guruch, piyoz , sabzi" -> ["Guruch", "Piyoz", "Sabzi"] */
+function parseIngredients(raw) {
+  const seen = new Set();
+  return String(raw || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => s.charAt(0).toLocaleUpperCase("uz") + s.slice(1))
+    .filter((s) => { const k = s.toLocaleLowerCase("uz"); if (seen.has(k)) return false; seen.add(k); return true; });
 }
 
 // ── Library reads ─────────────────────────────────────────────────────
@@ -1370,6 +1613,156 @@ function shuffleWeek(w) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
+// Shopping list
+// ══════════════════════════════════════════════════════════════════════
+
+/**
+ * Walk every meal in scope and tally ingredients.
+ * scope: "all" for the whole month, or a week index.
+ * Returns groups in CATEGORIES order plus the dishes that have no
+ * ingredients recorded, so the list can admit what it does not know.
+ */
+function buildShoppingList(scope) {
+  const weeks = scope === "all" ? state.weeks : [state.weeks[scope]];
+  const tally = new Map();
+  const noIngredients = new Set();
+
+  const addDish = (kind, id) => {
+    const item = itemById(kind, id);
+    if (!item) return;
+    const ings = Array.isArray(item.ing) ? item.ing.filter(Boolean) : [];
+    if (!ings.length) { noIngredients.add(item.n); return; }
+    ings.forEach((ing) => {
+      if (!tally.has(ing)) tally.set(ing, { name: ing, meals: 0, dishes: new Set() });
+      const entry = tally.get(ing);
+      entry.meals += 1;
+      entry.dishes.add(item.n);
+    });
+  };
+
+  weeks.forEach((w) => {
+    w.days.forEach((day) => { addDish("b", day.b); addDish("l", day.l); addDish("d", day.d); });
+    addDish("b", w.sundayB);
+    addDish("sp", w.specialId);
+  });
+
+  const groups = CATEGORIES.map(([key, label]) => ({
+    key,
+    label,
+    items: [...tally.values()]
+      .filter((e) => (ING_CATEGORY[e.name] || "ziravor") === key)
+      .sort((a, b) => b.meals - a.meals || a.name.localeCompare(b.name, "uz")),
+  })).filter((g) => g.items.length);
+
+  return { groups, total: tally.size, noIngredients: [...noIngredients].sort() };
+}
+
+const shopping = $("#shopping");
+let shopScope = "all";
+
+function scopeLabel(scope) {
+  return scope === "all" ? "Butun oy" : scope + 1 + "-hafta";
+}
+
+function openShopping() {
+  renderShopping();
+  shopping.showModal();
+}
+
+function renderShopping() {
+  const list = buildShoppingList(shopScope);
+
+  $("#shop-scopes").innerHTML = ["all", 0, 1, 2, 3].map((sc) =>
+    '<button type="button" class="tab" role="tab" data-scope="' + sc + '"' +
+    ' aria-selected="' + (String(sc) === String(shopScope)) + '">' + scopeLabel(sc) + "</button>"
+  ).join("");
+
+  const boughtCount = list.groups
+    .flatMap((g) => g.items)
+    .filter((it) => state.bought[it.name]).length;
+
+  $("#shop-summary").textContent =
+    list.total + " ta mahsulot · " + boughtCount + " tasi olindi";
+
+  let html = list.groups.map((g) =>
+    '<section class="shop-group">' +
+      '<h3 class="shop-group-title">' + esc(g.label) + "</h3>" +
+      g.items.map((it) => {
+        const done = !!state.bought[it.name];
+        // Beef shows up in 16 dishes; listing them all buries the row. Show
+        // them all up to five, since "va yana 1 ta" is longer than the name.
+        const all = [...it.dishes].sort();
+        const dishes = all.length > 5
+          ? all.slice(0, 4).join(", ") + " va yana " + (all.length - 4) + " ta"
+          : all.join(", ");
+        return '<label class="shop-row' + (done ? " is-done" : "") + '">' +
+          '<input type="checkbox" class="lib-check" data-buy="' + esc(it.name) + '"' +
+            (done ? " checked" : "") + ">" +
+          "<span>" +
+            '<span class="shop-name">' + esc(it.name) +
+              '<span class="shop-count">' + it.meals + " ta taom</span>" +
+            "</span>" +
+            '<span class="shop-dishes">' + esc(dishes) + "</span>" +
+          "</span>" +
+        "</label>";
+      }).join("") +
+    "</section>"
+  ).join("");
+
+  if (list.noIngredients.length) {
+    html += '<section class="shop-group">' +
+      '<h3 class="shop-group-title">Mahsulotlari kiritilmagan</h3>' +
+      '<p class="shop-note">' + esc(list.noIngredients.join(", ")) +
+      " — bu taomlar uchun mahsulotlarni <strong>Taomlar ro'yxati</strong> oynasida qo'shing.</p>" +
+    "</section>";
+  }
+
+  $("#shop-list").innerHTML = html || '<p class="empty-note">Ro\'yxat bo\'sh.</p>';
+}
+
+function shoppingAsText() {
+  const list = buildShoppingList(shopScope);
+  const lines = ["Xarid ro'yxati — " + scopeLabel(shopScope), ""];
+  list.groups.forEach((g) => {
+    lines.push(g.label.toUpperCase());
+    g.items.forEach((it) => {
+      lines.push((state.bought[it.name] ? "[x] " : "[ ] ") + it.name + " (" + it.meals + " ta taom)");
+    });
+    lines.push("");
+  });
+  if (list.noIngredients.length) {
+    lines.push("MAHSULOTLARI KIRITILMAGAN", list.noIngredients.join(", "), "");
+  }
+  return lines.join("\n");
+}
+
+function renderShoppingPrint() {
+  const list = buildShoppingList(shopScope);
+  $("#shopping-print").innerHTML =
+    '<h1 class="print-title">Xarid ro\'yxati</h1>' +
+    '<p class="print-sub">' + esc(scopeLabel(shopScope)) + " · " + list.total + " ta mahsulot</p>" +
+    list.groups.map((g) =>
+      '<section class="print-group">' +
+        "<h2>" + esc(g.label) + "</h2>" +
+        "<ul>" + g.items.map((it) =>
+          "<li>" + esc(it.name) + " <span>(" + it.meals + " ta taom)</span></li>"
+        ).join("") + "</ul>" +
+      "</section>"
+    ).join("") +
+    (list.noIngredients.length
+      ? '<p class="print-sub">Mahsulotlari kiritilmagan: ' + esc(list.noIngredients.join(", ")) + "</p>"
+      : "");
+}
+
+function printShopping() {
+  renderShoppingPrint();
+  document.body.classList.add("printing-list");
+  window.print();
+}
+
+window.addEventListener("afterprint", () => document.body.classList.remove("printing-list"));
+
+// ══════════════════════════════════════════════════════════════════════
 // Picker dialog
 // ══════════════════════════════════════════════════════════════════════
 
@@ -1459,6 +1852,8 @@ function renderLibrary() {
         '<div class="lib-edit">' +
           '<input type="text" class="field" data-edit="n" value="' + esc(it.n) + '" aria-label="Taom nomi" maxlength="60">' +
           '<input type="text" class="field" data-edit="s" value="' + esc(it.s || "") + '" aria-label="Izoh" maxlength="90">' +
+          '<input type="text" class="field" data-edit="ing" value="' + esc((it.ing || []).join(", ")) + '"' +
+            ' aria-label="Mahsulotlar, vergul bilan" placeholder="Mahsulotlar: Guruch, Piyoz, Sabzi" maxlength="240">' +
           '<div class="lib-edit-actions">' +
             '<button type="button" class="btn btn-accent" data-save="' + it.id + '">Saqlash</button>' +
             '<button type="button" class="btn btn-ghost" data-cancel>Bekor qilish</button>' +
@@ -1474,6 +1869,9 @@ function renderLibrary() {
       "<div>" +
         '<div class="lib-name">' + esc(it.n) + "</div>" +
         (it.s ? '<div class="lib-sub">' + esc(it.s) + "</div>" : "") +
+        ((it.ing && it.ing.length)
+          ? '<div class="lib-ing">' + esc(it.ing.join(", ")) + "</div>"
+          : '<div class="lib-ing is-missing">Mahsulotlar kiritilmagan</div>') +
       "</div>" +
       '<div class="lib-actions">' +
         '<button type="button" class="btn btn-quiet" data-edit-id="' + it.id + '" aria-label="' + esc(it.n) + ' — tahrirlash">' +
@@ -1515,6 +1913,52 @@ $("#btn-shuffle-all").addEventListener("click", () => {
 
 $("#btn-pdf").addEventListener("click", () => window.print());
 $("#btn-library").addEventListener("click", openLibrary);
+$("#btn-shopping").addEventListener("click", openShopping);
+
+// ── Shopping list ──
+$("#shop-scopes").addEventListener("click", (e) => {
+  const tab = e.target.closest("[data-scope]");
+  if (!tab) return;
+  shopScope = tab.dataset.scope === "all" ? "all" : Number(tab.dataset.scope);
+  renderShopping();
+});
+
+$("#shop-list").addEventListener("change", (e) => {
+  const box = e.target.closest("[data-buy]");
+  if (!box) return;
+  const name = box.dataset.buy;
+  if (box.checked) state.bought[name] = true;
+  else delete state.bought[name];
+  saveState();
+  renderShopping();
+});
+
+$("#btn-shop-copy").addEventListener("click", async () => {
+  const text = shoppingAsText();
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("Ro'yxat nusxalandi");
+  } catch (err) {
+    // Clipboard needs a secure context; fall back to a selectable textarea.
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(500px,90vw);height:50vh;z-index:200";
+    document.body.appendChild(ta);
+    ta.select();
+    toast("Nusxa olish uchun Ctrl+C bosing");
+    ta.addEventListener("blur", () => ta.remove(), { once: true });
+  }
+});
+
+$("#btn-shop-print").addEventListener("click", printShopping);
+
+$("#btn-shop-clear").addEventListener("click", () => {
+  state.bought = {};
+  saveState();
+  renderShopping();
+  toast("Belgilar tozalandi");
+});
 
 // ── Grid: slot clicks + per-week shuffle ──
 $("#main-content").addEventListener("click", (e) => {
@@ -1582,6 +2026,7 @@ $("#lib-list").addEventListener("click", (e) => {
     if (!n) { toast("Nomi bo'sh bo'lmasligi kerak"); return; }
     item.n = n;
     item.s = $('[data-edit="s"]', row).value.trim();
+    item.ing = parseIngredients($('[data-edit="ing"]', row).value);
     libEditing = null;
     saveState();
     renderLibrary();
@@ -1618,7 +2063,13 @@ $("#lib-add").addEventListener("submit", (e) => {
   const form = e.target;
   const n = form.n.value.trim();
   if (!n) return;
-  state.lib[libTab].push({ id: newId(libTab), n, s: form.s.value.trim(), on: true });
+  state.lib[libTab].push({
+    id: newId(libTab),
+    n,
+    s: form.s.value.trim(),
+    ing: parseIngredients(form.ing.value),
+    on: true,
+  });
   form.reset();
   form.n.focus();
   saveState();
