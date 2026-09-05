@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bir Oylik Dasturxon</title>
+<meta name="description" content="Bir oylik o'zbek dasturxoni — 4 haftalik ertalab, tushlik va kechki ovqat rejasi. Har yakshanba maxsus tantanali taom.">
+<meta name="theme-color" content="#F5F1E8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127860;</text></svg>">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bir Oylik Dasturxon">
+<meta property="og:description" content="Bir oylik o'zbek dasturxoni — 4 haftalik ovqat rejasi.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600&display=swap">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: light dark;
+  --bg:             #F5F1E8;
+  --surface:        #FDFAF3;
+  --surface-2:      #EDE8DA;
+  --border:         #D8CFC0;
+  --border-faint:   #E8E2D3;
+  --text:           #1C1710;
+  --text-muted:     #6A5D47;
+  --text-faint:     #A09080;
+  --accent:         #1A4870;
+  --accent-tint:    #EAF1F8;
+  --accent-hover:   #143A5C;
+  --special:        #B34010;
+  --special-tint:   #FDF1EB;
+  --special-border: #DFBFA8;
+  --week-rule:      #1A4870;
+  --btn-ghost-bg:   transparent;
+  --btn-ghost-text: #6A5D47;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:             #131008;
+    --surface:        #1B1812;
+    --surface-2:      #232018;
+    --border:         #2D2920;
+    --border-faint:   #252018;
+    --text:           #EDE8D8;
+    --text-muted:     #8A7D65;
+    --text-faint:     #534B3C;
+    --accent:         #4E8EC8;
+    --accent-tint:    #0C1E30;
+    --accent-hover:   #3A7AB8;
+    --special:        #C85C22;
+    --special-tint:   #1E0D04;
+    --special-border: #3C1E0C;
+    --week-rule:      #4E8EC8;
+    --btn-ghost-bg:   transparent;
+    --btn-ghost-text: #8A7D65;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:             #131008;
+  --surface:        #1B1812;
+  --surface-2:      #232018;
+  --border:         #2D2920;
+  --border-faint:   #252018;
+  --text:           #EDE8D8;
+  --text-muted:     #8A7D65;
+  --text-faint:     #534B3C;
+  --accent:         #4E8EC8;
+  --accent-tint:    #0C1E30;
+  --accent-hover:   #3A7AB8;
+  --special:        #C85C22;
+  --special-tint:   #1E0D04;
+  --special-border: #3C1E0C;
+  --week-rule:      #4E8EC8;
+  --btn-ghost-bg:   transparent;
+  --btn-ghost-text: #8A7D65;
+}
+
+body {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+}
+
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* ── Header ── */
+.page-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 2.25rem 2rem 1.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.header-left { flex: 1; min-width: 0; }
+
+.eyebrow {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.page-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.48rem 0.9rem;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.13s, color 0.13s, border-color 0.13s, opacity 0.13s;
+  border: 1px solid transparent;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn svg { flex-shrink: 0; }
+
+.btn-ghost {
+  background: var(--btn-ghost-bg);
+  color: var(--btn-ghost-text);
+  border-color: var(--border);
+}
+.btn-ghost:hover {
+  background: var(--accent-tint);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-accent:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.btn-special {
+  background: var(--special);
+  color: #fff;
+  border-color: var(--special);
+}
+.btn-special:hover { opacity: 0.88; }
+
+.btn-week {
+  background: transparent;
+  color: var(--text-faint);
+  border-color: var(--border-faint);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  margin-left: auto;
+}
+.btn-week:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+/* ── Main ── */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+/* ── Week block ── */
+.week-block { margin-bottom: 2.5rem; }
+
+.week-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 2px solid var(--week-rule);
+}
+
+.week-label {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.special-tag {
+  font-size: 0.63rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--special);
+  background: var(--special-tint);
+  border: 1px solid var(--special-border);
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* ── Grid ── */
+.grid-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(128px, 1fr));
+  min-width: 896px;
+  background: var(--border);
+  gap: 1px;
+}
+
+/* ── Day column ── */
+.day-col {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.day-col.is-special { background: var(--special-tint); }
+
+.day-head {
+  padding: 0.55rem 0.75rem 0.5rem;
+  background: var(--surface-2);
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.day-col.is-special .day-head {
+  background: var(--special);
+  color: rgba(255,255,255,0.93);
+  border-bottom: none;
+}
+
+/* ── Meal slots ── */
+.meal-slot {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-faint);
+  flex: 1;
+  min-height: 68px;
+}
+
+.day-col.is-special .meal-slot { border-bottom-color: var(--special-border); }
+.meal-slot:last-child { border-bottom: none; }
+
+.meal-type {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+  margin-bottom: 0.2rem;
+}
+
+.meal-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.meal-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.12rem;
+  line-height: 1.35;
+}
+
+/* ── Special feature ── */
+.special-feature {
+  padding: 0.8rem 0.75rem 0.9rem;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 108px;
+}
+
+.special-kicker {
+  font-size: 0.59rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--special);
+  margin-bottom: 0.35rem;
+}
+
+.special-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--special);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.special-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  line-height: 1.45;
+}
+
+/* ── Refresh animation ── */
+@keyframes cellIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.refreshing {
+  animation: cellIn 0.28s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refreshing { animation: none; }
+  .btn { transition: none; }
+}
+
+/* ── Legend strip ── */
+.legend-strip {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.pip {
+  width: 8px; height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.pip.regular { background: var(--accent); }
+.pip.special  { background: var(--special); }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  padding: 1.75rem 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+}
+
+/* ── Print styles ── */
+@media print {
+  @page { size: A4 landscape; margin: 1.2cm; }
+
+  :root {
+    --bg:             #ffffff;
+    --surface:        #ffffff;
+    --surface-2:      #f0ece0;
+    --border:         #c8c0b0;
+    --border-faint:   #ddd8cc;
+    --text:           #111111;
+    --text-muted:     #4a4030;
+    --text-faint:     #888070;
+    --accent:         #1A4870;
+    --accent-tint:    #EAF1F8;
+    --special:        #B34010;
+    --special-tint:   #fdf1eb;
+    --special-border: #dfbfa8;
+    --week-rule:      #1A4870;
+  }
+
+  .page-header { position: static; box-shadow: none; padding: 0 0 1rem; }
+  .header-controls, .btn-week { display: none !important; }
+  .eyebrow { margin-bottom: 0.25rem; }
+  .page-title { font-size: 2rem; }
+  .legend-strip { padding: 0.5rem 0 0; }
+  .main { padding: 1.5rem 0 0; }
+
+  .week-block {
+    break-after: page;
+    page-break-after: always;
+    margin-bottom: 0;
+  }
+  .week-block:last-child {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .grid-wrap {
+    overflow: visible;
+    border-color: #c8c0b0;
+  }
+
+  .days-grid { min-width: unset; }
+
+  .page-footer { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="eyebrow">Oylik ovqat rejasi · 4 hafta · Ertalab, tushlik, kechki</div>
+      <h1 class="page-title"><em>Bir Oylik</em> Dasturxon</h1>
+    </div>
+    <div class="header-controls">
+      <button class="btn btn-ghost" onclick="randomizeAll()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        Barchani yangilash
+      </button>
+      <button class="btn btn-special" onclick="exportPDF()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        PDF yuklash
+      </button>
+    </div>
+  </div>
+  <div class="legend-strip">
+    <div class="legend-item"><span class="pip regular"></span> Kunlik ovqat</div>
+    <div class="legend-item"><span class="pip special"></span> Maxsus ovqat (Yakshanba)</div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="main" id="main-content">
+
+  <section id="week-0" class="week-block">
+    <div class="week-header">
+      <span class="week-label">1-Hafta</span>
+      <span class="special-tag" id="stag-0">★ Dum Plov To'yi</span>
+      <button class="btn btn-week" onclick="randomizeWeek(0)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        Yangilash
+      </button>
+    </div>
+    <div class="grid-wrap"><div class="days-grid" id="grid-0"></div></div>
+  </section>
+
+  <section id="week-1" class="week-block">
+    <div class="week-header">
+      <span class="week-label">2-Hafta</span>
+      <span class="special-tag" id="stag-1">★ Norin To'yi</span>
+      <button class="btn btn-week" onclick="randomizeWeek(1)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        Yangilash
+      </button>
+    </div>
+    <div class="grid-wrap"><div class="days-grid" id="grid-1"></div></div>
+  </section>
+
+  <section id="week-2" class="week-block">
+    <div class="week-header">
+      <span class="week-label">3-Hafta</span>
+      <span class="special-tag" id="stag-2">★ Tandir To'yi</span>
+      <button class="btn btn-week" onclick="randomizeWeek(2)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        Yangilash
+      </button>
+    </div>
+    <div class="grid-wrap"><div class="days-grid" id="grid-2"></div></div>
+  </section>
+
+  <section id="week-3" class="week-block">
+    <div class="week-header">
+      <span class="week-label">4-Hafta</span>
+      <span class="special-tag" id="stag-3">★ Qozon Kabob To'yi</span>
+      <button class="btn btn-week" onclick="randomizeWeek(3)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        Yangilash
+      </button>
+    </div>
+    <div class="grid-wrap"><div class="days-grid" id="grid-3"></div></div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  Bir oylik o'zbek dasturxoni &middot; Har yakshanba maxsus tantanali taom
+</footer>
+
+<script>
+// ── Data pools ──────────────────────────────────────────────────────────────
+
+const DAYS = ['Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+
+const B = [
+  { n:"Non va Qaymoq",   s:"Ko'k choy bilan"          },
+  { n:"Tuxum Kovurma",   s:"Non va choy bilan"         },
+  { n:"Qatiq va Asal",   s:"Non bilan"                 },
+  { n:"Non va Meva",     s:"Ko'k choy bilan"           },
+  { n:"Somsa",           s:"Ko'k choy bilan"           },
+  { n:"Halim",           s:"Bug'doy va go'sht loshi"   },
+  { n:"Non va Sariyog'", s:"Ko'k choy bilan"           },
+  { n:"Qatiq va Shaftoli", s:"Non bilan"               },
+  { n:"Tuxum va Non",    s:"Ko'k choy bilan"           },
+  { n:"Qovoqli Somsa",   s:"Ko'k choy bilan"           },
+  { n:"Qatiq",           s:"Non va asal bilan"         },
+  { n:"Shirin Non",      s:"Ko'k choy, qaymoq bilan"  },
+];
+
+const L = [
+  { n:"Shurpa",          s:"Qo'zi go'shti, sabzavot"     },
+  { n:"Lagman",          s:"Aralash go'sht, sabzavot"     },
+  { n:"Mastava",         s:"Guruch, go'sht sho'rvasi"     },
+  { n:"Mosxo'rda",       s:"Mosh, go'sht, ziravorlar"    },
+  { n:"Chuchvara Sho'rva", s:"Mol go'shti sho'rvasi"     },
+  { n:"Dimlama",         s:"Qo'zi, kartoshka, sabzavot"  },
+  { n:"Moshkichiri",     s:"Mosh, guruch, go'sht"        },
+  { n:"Tovuq Shurpasi",  s:"Ko'k sabzavot, kartoshka"    },
+  { n:"Qovurma Lagman",  s:"Qovurilgan aralash go'sht"   },
+];
+
+const D = [
+  { n:"Plov",             s:"Ziravorlar bilan"              },
+  { n:"Samsa",            s:"Ko'k choy bilan"               },
+  { n:"Shashlik",         s:"Non va ko'k salatlar"          },
+  { n:"Manti",            s:"Qaymoq bilan"                  },
+  { n:"Qovurma Kabob",    s:"Non va sabzavot"               },
+  { n:"Qozon Plov",       s:"Sariyog', zira bilan"          },
+  { n:"Zirali Plov",      s:"Zira va sariyog' bilan"        },
+  { n:"Tandir Kabob",     s:"Non, ko'k salatlar bilan"      },
+  { n:"Naryn",            s:"Otqorin, piyoz sho'rvasi"      },
+  { n:"Chuchvara",        s:"Qaymoq yoki sho'rva bilan"     },
+  { n:"Kabob va Non",     s:"Ko'k salatlar bilan"           },
+  { n:"Qovurma",          s:"Go'sht, piyoz, non"            },
+  { n:"Sariq Plov",       s:"Za'faron, qishmish bilan"      },
+  { n:"Qovoqli Manti",    s:"Qaymoq, ziravorlar bilan"      },
+  { n:"Chuchvarali Plov", s:"Guruch, go'sht, chuchvara"     },
+];
+
+const SPECIALS = [
+  { n:"Dum Plov To'yi",      d:"Qo'zi go'shti, quritilgan o'rik va bedona tuxumi bilan qatlamlangan tantanali plov" },
+  { n:"Norin To'yi",         d:"Qo'lda tortilgan kesma, otqorin go'shti va piyoz sho'rvasi bilan an'anaviy tantanali taom" },
+  { n:"Tandir To'yi",        d:"Tandirda butun qo'zi, yangi somsa va o't-o'lan salatlar bilan kechki ziyofat" },
+  { n:"Qozon Kabob To'yi",   d:"Cho'yan qozonda qo'zi, mol va tovuq go'shtlari, yangi kartoshka va piyoz bilan kechki ziyofat" },
+];
+
+const SUN_B = { n:"Non va Choy", s:"Qaymoq, asal bilan" };
+
+// ── Initial state ────────────────────────────────────────────────────────────
+
+let weeks = [
+  { specialIdx:0, days:[
+    [B[0], L[0], D[0]],
+    [B[1], L[1], D[1]],
+    [B[2], L[2], D[2]],
+    [B[3], L[3], D[3]],
+    [B[4], L[4], D[4]],
+    [B[5], L[5], D[5]],
+  ]},
+  { specialIdx:1, days:[
+    [B[6], L[0], D[6]],
+    [B[8], L[8], D[1]],
+    [B[7], L[2], D[2]],
+    [B[3], L[7], D[9]],
+    [B[9], L[3], D[7]],
+    [B[1], L[5], D[8]],
+  ]},
+  { specialIdx:2, days:[
+    [B[0], L[7], D[12]],
+    [B[5], L[8], D[13]],
+    [B[2], L[2], D[2]],
+    [B[6], L[3], D[1]],
+    [B[1], L[4], D[11]],
+    [B[3], L[5], D[10]],
+  ]},
+  { specialIdx:3, days:[
+    [B[0], L[0], D[14]],
+    [B[8], L[1], D[1]],
+    [B[10], L[2], D[2]],
+    [B[3], L[7], D[3]],
+    [B[5], L[3], D[7]],
+    [B[6], L[5], D[8]],
+  ]},
+];
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+function renderWeek(wi, animate) {
+  const week  = weeks[wi];
+  const grid  = document.getElementById('grid-' + wi);
+  const stag  = document.getElementById('stag-' + wi);
+  const sp    = SPECIALS[week.specialIdx];
+
+  stag.textContent = '★ ' + sp.n;
+
+  let html = '';
+
+  week.days.forEach((day, di) => {
+    html += `
+      <div class="day-col">
+        <div class="day-head">${DAYS[di]}</div>
+        <div class="meal-slot${animate ? ' refreshing' : ''}">
+          <div class="meal-type">Ertalab</div>
+          <div class="meal-name">${day[0].n}</div>
+          <div class="meal-sub">${day[0].s}</div>
+        </div>
+        <div class="meal-slot${animate ? ' refreshing' : ''}" style="${animate ? 'animation-delay:.04s' : ''}">
+          <div class="meal-type">Tushlik</div>
+          <div class="meal-name">${day[1].n}</div>
+          <div class="meal-sub">${day[1].s}</div>
+        </div>
+        <div class="meal-slot${animate ? ' refreshing' : ''}" style="${animate ? 'animation-delay:.08s' : ''}">
+          <div class="meal-type">Kechki</div>
+          <div class="meal-name">${day[2].n}</div>
+          <div class="meal-sub">${day[2].s}</div>
+        </div>
+      </div>`;
+  });
+
+  html += `
+    <div class="day-col is-special">
+      <div class="day-head">Yakshanba</div>
+      <div class="meal-slot${animate ? ' refreshing' : ''}" style="${animate ? 'animation-delay:.12s' : ''}">
+        <div class="meal-type">Ertalab</div>
+        <div class="meal-name">${SUN_B.n}</div>
+        <div class="meal-sub">${SUN_B.s}</div>
+      </div>
+      <div class="special-feature${animate ? ' refreshing' : ''}" style="${animate ? 'animation-delay:.16s' : ''}">
+        <div class="special-kicker">Maxsus ovqat</div>
+        <div class="special-title">${sp.n}</div>
+        <div class="special-desc">${sp.d}</div>
+      </div>
+    </div>`;
+
+  grid.innerHTML = html;
+}
+
+// ── Actions ──────────────────────────────────────────────────────────────────
+
+function randomizeWeek(wi) {
+  const bs = shuffle(B).slice(0, 6);
+  const ls = shuffle(L).slice(0, 6);
+  const ds = shuffle(D).slice(0, 6);
+  weeks[wi].days = Array.from({length: 6}, (_, i) => [bs[i], ls[i], ds[i]]);
+  renderWeek(wi, true);
+}
+
+function randomizeAll() {
+  weeks.forEach((_, i) => randomizeWeek(i));
+}
+
+function exportPDF() {
+  window.print();
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+
+weeks.forEach((_, i) => renderWeek(i, false));
+</script>
+
+</body>
+</html>
