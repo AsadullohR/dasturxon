@@ -304,6 +304,7 @@ img { max-width: 100%; }
   font-weight: 600;
   color: var(--accent);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .special-tag {
@@ -319,6 +320,7 @@ img { max-width: 100%; }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* ═══ Grid ═══ */
@@ -418,14 +420,11 @@ img { max-width: 100%; }
   top: 0.55rem;
   right: 0.5rem;
   color: var(--text-muted);
-  opacity: 0.42;
+  opacity: 0.32;
   transition: opacity 0.12s, color 0.12s;
   pointer-events: none;
 }
 
-@media (hover: hover) {
-  .slot-pen { opacity: 0; }
-}
 .meal-slot:hover .slot-pen,
 .meal-slot:focus-visible .slot-pen { opacity: 1; color: var(--accent); }
 .day-col.is-special .meal-slot:hover .slot-pen,
@@ -499,8 +498,6 @@ img { max-width: 100%; }
 .pip { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
 .pip.regular { background: var(--accent); }
 .pip.special { background: var(--special); }
-
-.legend-hint { color: var(--text-faint); }
 
 /* ═══ Footer ═══ */
 .page-footer {
@@ -748,19 +745,6 @@ dialog::backdrop { background: var(--overlay); }
 
 .lib-edit-actions { display: flex; gap: 0.4rem; }
 
-.used-badge {
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-tint);
-  border-radius: 2px;
-  padding: 0.05rem 0.3rem;
-  margin-left: 0.35rem;
-  white-space: nowrap;
-}
-
 /* ═══ Toast ═══ */
 .toast {
   position: fixed;
@@ -802,6 +786,8 @@ dialog::backdrop { background: var(--overlay); }
 /* ═══ Small screens ═══ */
 @media (max-width: 700px) {
   .page-header { padding: 1.4rem 1.1rem 1.1rem; }
+  .header-inner { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .header-controls { justify-content: flex-start; }
   .legend-strip { padding: 0.7rem 1.1rem 0; gap: 1rem; }
   .main { padding: 1.5rem 1.1rem 4rem; }
   .header-controls .lbl {
@@ -839,7 +825,6 @@ dialog::backdrop { background: var(--overlay); }
   .page-header { position: static; box-shadow: none; padding: 0 0 1rem; }
   .header-controls, .btn-week, .slot-pen, .toast { display: none !important; }
   dialog { display: none !important; }
-  .legend-hint { display: none; }
   .eyebrow { margin-bottom: 0.25rem; }
   .page-title { font-size: 2rem; }
   .legend-strip { padding: 0.5rem 0 0; }
@@ -913,7 +898,6 @@ dialog::backdrop { background: var(--overlay); }
   <div class="legend-strip">
     <div class="legend-item"><span class="pip regular"></span> Kunlik ovqat</div>
     <div class="legend-item"><span class="pip special"></span> Maxsus ovqat (Yakshanba)</div>
-    <div class="legend-item legend-hint">Taomni o'zgartirish uchun katakchani bosing</div>
   </div>
 </header>
 
@@ -969,8 +953,7 @@ dialog::backdrop { background: var(--overlay); }
     <div class="tabs" role="tablist" id="lib-tabs"></div>
 
     <div class="lib-note">
-      Belgilangan taomlar <strong>tasodifiy yangilashda</strong> ishlatiladi. Belgini olib tashlasangiz,
-      taom ro'yxatda qoladi, lekin tasodifiy tanlovga tushmaydi.
+      Belgilangan taomlar <strong>tasodifiy yangilashda</strong> ishlatiladi.
     </div>
 
     <div class="dlg-body">
@@ -1215,16 +1198,6 @@ function setSlot(w, di, kind, id) {
   if (kind === "sp") week.specialId = id;
   else if (di === "sun") week.sundayB = id;
   else week.days[di][kind] = id;
-}
-
-function usedIds() {
-  const used = new Set();
-  state.weeks.forEach((w) => {
-    used.add(w.specialId);
-    used.add(w.sundayB);
-    w.days.forEach((day) => { used.add(day.b); used.add(day.l); used.add(day.d); });
-  });
-  return used;
 }
 
 /** Replace any plan reference to a removed dish with a random enabled one. */
@@ -1479,8 +1452,6 @@ function renderLibrary() {
     '<span class="tab-count">' + state.lib[k].length + "</span></button>"
   ).join("");
 
-  const used = usedIds();
-
   $("#lib-list").innerHTML = state.lib[libTab].map((it) => {
     if (libEditing === it.id) {
       return '<div class="lib-row" data-id="' + it.id + '">' +
@@ -1501,9 +1472,7 @@ function renderLibrary() {
         (it.on === false ? "" : " checked") +
         ' aria-label="' + esc(it.n) + ' — tasodifiy tanlovga kiritish">' +
       "<div>" +
-        '<div class="lib-name">' + esc(it.n) +
-          (used.has(it.id) ? '<span class="used-badge">rejada</span>' : "") +
-        "</div>" +
+        '<div class="lib-name">' + esc(it.n) + "</div>" +
         (it.s ? '<div class="lib-sub">' + esc(it.s) + "</div>" : "") +
       "</div>" +
       '<div class="lib-actions">' +
